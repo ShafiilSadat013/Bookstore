@@ -1,26 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
+const { db } = require('../config/db');
 
-// Proxy to Google Books API
+// Get all books
 router.get('/', async (req, res) => {
-  const { q } = req.query;
-  if (!q) return res.status(400).json({ message: 'Query parameter q is required' });
-  
   try {
-    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}${apiKey ? `&key=${apiKey}` : ''}`;
-    
-    const response = await axios.get(url);
-    const books = response.data.items ? response.data.items.map(item => ({
-      id: item.id,
-      title: item.volumeInfo.title,
-      authors: item.volumeInfo.authors,
-      thumbnail: item.volumeInfo.imageLinks?.thumbnail
-    })) : [];
+    const [books] = await db.query('SELECT * FROM books');
     res.json(books);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get single book
+router.get('/:id', async (req, res) => {
+  try {
+    const [books] = await db.query('SELECT * FROM books WHERE id = ?', [req.params.id]);
+    res.json(books[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

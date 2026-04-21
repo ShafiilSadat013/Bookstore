@@ -3,38 +3,58 @@ const router = express.Router();
 const { db } = require('../config/db');
 const { isAuthenticated } = require('../middleware/authMiddleware');
 
-// Create order
+// CREATE ORDER
 router.post('/', isAuthenticated, async (req, res) => {
-  const { book_id, title } = req.body;
   const user_id = req.session.user.id;
+  const { items } = req.body;
+
+  const connection = await db.getConnection();
+
   try {
-    await db.query('INSERT INTO orders (user_id, book_id, title) VALUES (?, ?, ?)', [user_id, book_id, title]);
-    res.status(201).json({ message: 'Order placed successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    await connection.beginTransaction();
+
+    const [orderResult] = await connection.query(
+      'INSERT INTO orders (user_id) VALUES (?)',
+      [user_id]
+    );
+
+    const order_id = orderResult.insertId;
+
+    for (let item of items) {
+      await connection.query(
+        'INSERT INTO order_items (order_id, book_id, quantity) VALUES (?, ?, ?)',
+        [order_id, item.book_id, item.quantity]
+      );
+    }
+
+    await connection.commit();
+    res.json({ message: 'Order placed' });
+
+  } catch (err) {
+    await connection.rollback();
+    res.status(500).json({ error: err.message });
+  } finally {
+    connection.release();
   }
 });
 
-// Get my orders
+// GET MY ORDERS
 router.get('/my-orders', isAuthenticated, async (req, res) => {
   const user_id = req.session.user.id;
-  try {
-    const [rows] = await db.query('SELECT * FROM orders WHERE user_id = ?', [user_id]);
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
-// Cancel order
-router.put('/:id/cancel', isAuthenticated, async (req, res) => {
-  const { id } = req.params;
-  const user_id = req.session.user.id;
   try {
-    await db.query('UPDATE orders SET status = "cancelled" WHERE id = ? AND user_id = ?', [id, user_id]);
-    res.json({ message: 'Order cancelled' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const [orders] = await db.query(`
+      SELECT o.id, o.status, o.created_at,
+             b.title, oi.quantity
+      FROM orders o
+      JOIN order_items oi ON o.id = oi.order_id
+      JOIN books b ON oi.book_id = b.id
+      WHERE o.user_id = ?
+    `, [user_id]);
+
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

@@ -5,27 +5,43 @@ const { isAdmin } = require('../middleware/authMiddleware');
 
 router.use(isAdmin);
 
-// View all users
-router.get('/users', async (req, res) => {
+// ADD BOOK
+router.post('/books', async (req, res) => {
+  const { title, author, price, stock } = req.body;
+
   try {
-    const [rows] = await db.query('SELECT id, name, email, role FROM users');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    await db.query(
+      'INSERT INTO books (title, author, price, stock) VALUES (?, ?, ?, ?)',
+      [title, author, price, stock]
+    );
+    res.json({ message: 'Book added' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
-// View all orders
-router.get('/orders', async (req, res) => {
+// UPDATE BOOK
+router.put('/books/:id', async (req, res) => {
+  const { title, author, price, stock } = req.body;
+
   try {
-    const [rows] = await db.query(`
-      SELECT orders.*, users.name as user_name 
-      FROM orders 
-      JOIN users ON orders.user_id = users.id
-    `);
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    await db.query(
+      'UPDATE books SET title=?, author=?, price=?, stock=? WHERE id=?',
+      [title, author, price, stock, req.params.id]
+    );
+    res.json({ message: 'Book updated' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE BOOK
+router.delete('/books/:id', async (req, res) => {
+  try {
+    await db.query('DELETE FROM books WHERE id=?', [req.params.id]);
+    res.json({ message: 'Book deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
