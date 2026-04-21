@@ -1,39 +1,65 @@
-require('dotenv').config();
-const express = require('express');
-const session = require('express-session');
-const cors = require('cors');
-const authRoutes = require('./routes/authRoutes');
-const bookRoutes = require('./routes/bookRoutes');
-const orderRoutes = require('./routes/orderRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const { initDB } = require('./config/db');
+require("dotenv").config();
+const express = require("express");
+const session = require("express-session");
+const cors = require("cors");
+
+const authRoutes = require("./routes/authRoutes");
+const bookRoutes = require("./routes/bookRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+
+const { initDB } = require("./config/db");
 
 const app = express();
 const PORT = 5000;
 
-app.use(cors({
-  origin: 'http://localhost:5173', // Vite default port
-  credentials: true
-}));
 app.use(express.json());
-app.use(session({
-  secret: 'bookstore-secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false } // Set to true if using HTTPS
-}));
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/books', bookRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/admin', adminRoutes);
+/* =========================
+   CORS CONFIG (IMPORTANT)
+========================= */
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
-// Initialize Database then Start Server
-initDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+/* =========================
+   SESSION CONFIG (CRITICAL FIX)
+========================= */
+app.use(
+  session({
+    secret: "bookstore-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax", // IMPORTANT for localhost
+    },
+  }),
+);
+
+/* =========================
+   ROUTES
+========================= */
+app.use("/api/auth", authRoutes);
+app.use("/api/books", bookRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/cart", cartRoutes);
+
+/* =========================
+   INIT DB + START SERVER
+========================= */
+initDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Failed to initialize database:", err);
   });
-}).catch(err => {
-  console.error('Failed to initialize database:', err);
-});
