@@ -12,6 +12,8 @@ The Full-Stack Bookstore Management System is a modern web-based application des
 
 ![image](https://github.com/ShafiilSadat013/Bookstore/blob/cf777ece5b3a654f6beefe189b265210c27caf7e/Banner.jpeg)
 
+![image](https://github.com/ShafiilSadat013/Bookstore/blob/4a60b036a98a56b103d2e9558f212262b4046ee5/trending.jpeg)
+
 Built using React for the frontend, Node.js with Express for the backend, and MySQL/MariaDB for database management, the system demonstrates the implementation of full-stack development principles. The backend handles API routing, business logic, and database communication, while the frontend provides dynamic user interaction.
 
 ## 👥 Group Details
