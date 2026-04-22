@@ -57,8 +57,13 @@ The objective of this project is to design and develop a full-stack web-based bo
 ## ⚙️ Functionalities
 
 - User Registration and Login System
-  ![image](https://github.com/ShafiilSadat013/Bookstore/blob/82488b102fe176ced034d1c2591528f3f51247d2/login.jpeg)  
-- Book Purchase System  
+  
+  ![image](https://github.com/ShafiilSadat013/Bookstore/blob/82488b102fe176ced034d1c2591528f3f51247d2/login.jpeg)
+    
+- Book Purchase System
+  
+  ![image](https://github.com/ShafiilSadat013/Bookstore/blob/1618fd379b49baa9c4b1f3ca26f65ffde52ad960/cart.jpeg)
+  
 - Order Management  
 - Admin Dashboard  
 - User Management  
