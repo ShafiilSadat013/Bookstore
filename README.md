@@ -68,7 +68,10 @@ The objective of this project is to design and develop a full-stack web-based bo
   
   ![image](https://github.com/ShafiilSadat013/Bookstore/blob/de95fe436435f09cffe85e2bfe821e0d8aebd361/orderTrackAdmin.jpeg)
 
-- Admin Dashboard  
+- Admin Dashboard
+  
+  ![image](https://github.com/ShafiilSadat013/Bookstore/blob/ec75b9b3cc04d4208a032397c1c171ec57e2e06e/admin%20dash%20board.jpeg)
+  
 - User Management  
 - Database Integration with MySQL  
 
