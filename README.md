@@ -37,14 +37,28 @@ Metropolitan University, Sylhet
 
 4. **Simanto Chandra Kor**  
    ID: 241-115-047  
-   ROLE: Database Design and ER Diagram  
-### OBJECTIVE ###
+   ROLE: Database Design and ER Diagram
+   
+## 🎯 Objective
 
 The objective of this project is to design and develop a full-stack web-based bookstore system that enables users to browse, search, and purchase books efficiently while providing administrators with tools to manage books, users, and orders. The project aims to demonstrate the integration of frontend, backend, and database technologies, implement secure user authentication, and apply proper database design using ER modeling to ensure efficient data management and system reliability.
 
-FUNCTIONALITIES:
+---
 
-ER DIAGRAM:
+## ⚙️ Functionalities
+
+- User Registration and Login System  
+- Book Search Functionality  
+- Book Purchase System  
+- Order Management  
+- Admin Dashboard  
+- User Management  
+- Database Integration with MySQL  
+- Responsive Frontend Interface  
+
+---
+
+## 🗂️ ER Diagram
 ![image alt](https://github.com/cfardin/Bookstore/blob/837609d71fcfc4b53956a2e18b7929e1c4269997/ER.jpeg)
 
 
